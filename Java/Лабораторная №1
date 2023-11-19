@@ -1,1 +1,44 @@
+public class Car {
+    // Приватные переменные, инкапсулированные внутри класса
+    private String model;
+    private int year;
 
+    // Конструктор класса
+    public Car(String model, int year) {
+        this.model = model;
+        this.year = year;
+    }
+
+    // Методы для получения и установки значений переменных (геттеры и сеттеры)
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        // В реальном приложении здесь могут быть дополнительные проверки
+        this.year = year;
+    }
+
+    // Дополнительные методы работы с объектом
+    public void start() {
+        System.out.println("The car is starting.");
+    }
+
+    public void stop() {
+        System.out.println("The car is stopping.");
+    }
+}
+//В этом примере переменные model и year являются приватными (private), что означает, что они доступны только внутри класса Car. 
+//Для доступа к ним извне класса предоставлены геттеры и сеттеры (методы getModel(), setModel(), getYear(), setYear()). 
+//Это позволяет контролировать доступ и изменение значений этих переменных, обеспечивая более безопасное взаимодействие с объектом.
+
+//Инкапсуляция помогает сокрыть детали реализации класса от клиентского кода,
+что делает код более устойчивым к изменениям и облегчает его понимание.
