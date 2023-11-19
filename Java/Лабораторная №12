@@ -1,1 +1,111 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+public class CalculatorGUI extends JFrame {
+    private JTextField textField;
+    private double firstOperand;
+    private String operator;
+
+    // Конструктор класса CalculatorGUI
+    public CalculatorGUI() {
+        setTitle("Калькулятор");
+        setSize(300, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BorderLayout());
+
+        // Текстовое поле для ввода и отображения чисел
+        textField = new JTextField();
+        panel.add(textField, BorderLayout.NORTH);
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.setLayout(new GridLayout(4, 4));
+
+        // Массив строк с подписями для кнопок
+        String[] buttonLabels = {
+                "7", "8", "9", "/",
+                "4", "5", "6", "*",
+                "1", "2", "3", "-",
+                "0", ".", "=", "+"
+        };
+
+        // Создание кнопок и добавление слушателя для каждой кнопки
+        for (String label : buttonLabels) {
+            JButton button = new JButton(label);
+            button.addActionListener(new ButtonClickListener());
+            buttonPanel.add(button);
+        }
+
+        // Добавление панели с кнопками в основную панель
+        panel.add(buttonPanel, BorderLayout.CENTER);
+
+        // Добавление основной панели в главное окно
+        add(panel);
+    }
+
+    // Класс для обработки событий нажатия на кнопки
+    private class ButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JButton source = (JButton) e.getSource();
+            String command = source.getText();
+
+            // Обработка событий для цифр и точки
+            if ("0123456789.".contains(command)) {
+                textField.setText(textField.getText() + command);
+            }
+            // Обработка событий для арифметических операторов
+            else if ("+-*/".contains(command)) {
+                firstOperand = Double.parseDouble(textField.getText());
+                operator = command;
+                textField.setText("");
+            }
+            // Обработка события равно
+            else if ("=".equals(command)) {
+                double secondOperand = Double.parseDouble(textField.getText());
+                double result = calculate(firstOperand, secondOperand, operator);
+                textField.setText(String.valueOf(result));
+            }
+        }
+
+        // Метод для выполнения арифметических операций
+        private double calculate(double firstOperand, double secondOperand, String operator) {
+            switch (operator) {
+                case "+":
+                    return firstOperand + secondOperand;
+                case "-":
+                    return firstOperand - secondOperand;
+                case "*":
+                    return firstOperand * secondOperand;
+                case "/":
+                    // Обработка деления на ноль
+                    if (secondOperand == 0) {
+                        JOptionPane.showMessageDialog(null, "Деление на ноль недопустимо.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                        clear();
+                        return 0;
+                    } else {
+                        return firstOperand / secondOperand;
+                    }
+                default:
+                    return 0;
+            }
+        }
+
+        // Метод для очистки данных
+        private void clear() {
+            firstOperand = 0;
+            operator = null;
+            textField.setText("");
+        }
+    }
+
+    // Метод main для запуска приложения
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            CalculatorGUI calculator = new CalculatorGUI();
+            calculator.setVisible(true);
+        });
+    }
+}
