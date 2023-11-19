@@ -1,1 +1,102 @@
+// Пакет animals
 
+// Интерфейс для определения поведения животных
+public interface Animal {
+    void makeSound();
+    void move();
+}
+
+// Абстрактный класс для общих характеристик всех животных
+public abstract class AbstractAnimal implements Animal {
+    protected String name;
+
+    public AbstractAnimal(String name) {
+        this.name = name;
+    }
+
+    public abstract void eat();
+}
+
+// Класс для представления конкретного животного - льва
+public class Lion extends AbstractAnimal {
+    public Lion(String name) {
+        super(name);
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println("Roar!");
+    }
+
+    @Override
+    public void move() {
+        System.out.println("Lion is walking.");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Lion is eating meat.");
+    }
+}
+
+// Класс для представления конкретного животного - слона
+public class Elephant extends AbstractAnimal {
+    public Elephant(String name) {
+        super(name);
+    }
+
+    @Override
+    public void makeSound() {
+        System.out.println("Trumpet!");
+    }
+
+    @Override
+    public void move() {
+        System.out.println("Elephant is walking.");
+    }
+
+    @Override
+    public void eat() {
+        System.out.println("Elephant is eating leaves.");
+    }
+
+
+
+// Пакет staff
+
+// Интерфейс для определения поведения сотрудников зоопарка
+public interface ZooStaff {
+    void performDuties();
+}
+
+// Абстрактный класс для общих характеристик всех сотрудников зоопарка
+public abstract class AbstractZooStaff implements ZooStaff {
+    protected String name;
+
+    public AbstractZooStaff(String name) {
+        this.name = name;
+    }
+}
+
+// Класс для представления конкретного сотрудника зоопарка - кормильщика
+public class Feeder extends AbstractZooStaff {
+    public Feeder(String name) {
+        super(name);
+    }
+
+    @Override
+    public void performDuties() {
+        System.out.println("Feeder is feeding the animals.");
+    }
+}
+
+// Класс для представления конкретного сотрудника зоопарка - ветеринара
+public class Veterinarian extends AbstractZooStaff {
+    public Veterinarian(String name) {
+        super(name);
+    }
+
+    @Override
+    public void performDuties() {
+        System.out.println("Veterinarian is taking care of the animals' health.");
+    }
