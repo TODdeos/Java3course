@@ -1,1 +1,44 @@
+import javax.swing.*;
+import java.awt.*;
+
+public class LayoutManagerExample extends JFrame {
+
+    public LayoutManagerExample() {
+        setTitle("Пример менеджеров компоновки");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 300);
+
+        // Используем FlowLayout в основном окне
+        setLayout(new FlowLayout());
+
+        // Панель с FlowLayout
+        JPanel flowPanel = new JPanel();
+        flowPanel.setLayout(new FlowLayout());
+        flowPanel.add(new JButton("Кнопка 1"));
+        flowPanel.add(new JButton("Кнопка 2"));
+        flowPanel.add(new JButton("Кнопка 3"));
+
+        // Панель с BorderLayout
+        JPanel borderPanel = new JPanel();
+        borderPanel.setLayout(new BorderLayout());
+        borderPanel.add(new JButton("Север"), BorderLayout.NORTH);
+        borderPanel.add(new JButton("Юг"), BorderLayout.SOUTH);
+        borderPanel.add(new JButton("Восток"), BorderLayout.EAST);
+        borderPanel.add(new JButton("Запад"), BorderLayout.WEST);
+        borderPanel.add(new JButton("Центр"), BorderLayout.CENTER);
+
+        // Добавляем панели в основное окно
+        add(flowPanel);
+        add(borderPanel);
+
+        // Сделаем видимым
+        setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new LayoutManagerExample();
+        });
+    }
+}
 
