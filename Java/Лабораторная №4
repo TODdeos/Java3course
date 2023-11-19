@@ -1,1 +1,35 @@
+// Класс "Двигатель", который является частью класса "Автомобиль"
+class Engine {
+    // Реализация двигателя
+}
 
+// Класс "Автомобиль", включающий объект "Двигатель"
+class Car {
+    private Engine engine;
+
+    public Car() {
+        this.engine = new Engine();
+    }
+}
+
+// Класс "Отделение", которое является частью класса "Университет"
+class Department {
+    // Реализация отделения
+}
+
+// Класс "Университет", включающий объекты "Отделение"
+class University {
+    private List<Department> departments;
+
+    public University() {
+        this.departments = new ArrayList<>();
+    }
+
+    public void addDepartment(Department department) {
+        this.departments.add(department);
+    }
+}
+
+Отличие между композицией и агрегацией заключается в том, 
+насколько тесно связаны объекты друг с другом и каков их
+жизненный цикл в контексте друг друга.
