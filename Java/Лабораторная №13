@@ -1,1 +1,86 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+
+public class TextEditor extends JFrame {
+    private JTextArea textArea;
+    private JFileChooser fileChooser;
+
+    public TextEditor() {
+        setTitle("Текстовый редактор");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        textArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        fileChooser = new JFileChooser();
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("Файл");
+
+        // Пункт меню "Открыть"
+        JMenuItem openMenuItem = new JMenuItem("Открыть");
+        openMenuItem.addActionListener(new OpenActionListener());
+        fileMenu.add(openMenuItem);
+
+        // Пункт меню "Сохранить"
+        JMenuItem saveMenuItem = new JMenuItem("Сохранить");
+        saveMenuItem.addActionListener(new SaveActionListener());
+        fileMenu.add(saveMenuItem);
+
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+
+        add(scrollPane);
+    }
+
+    // ActionListener для открытия файла
+    private class OpenActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int returnVal = fileChooser.showOpenDialog(TextEditor.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                    StringBuilder text = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        text.append(line).append("\n");
+                    }
+                    textArea.setText(text.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(TextEditor.this, "Ошибка при чтении файла", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    // ActionListener для сохранения файла
+    private class SaveActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int returnVal = fileChooser.showSaveDialog(TextEditor.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                    writer.write(textArea.getText());
+                    JOptionPane.showMessageDialog(TextEditor.this, "Файл успешно сохранен", "Успех", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(TextEditor.this, "Ошибка при сохранении файла", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            TextEditor textEditor = new TextEditor();
+            textEditor.setVisible(true);
+        });
+    }
+}
 
