@@ -1,1 +1,95 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+// Класс, представляющий карту
+class Card {
+    private String rank;
+    private String suit;
+
+    public Card(String rank, String suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    @Override
+    public String toString() {
+        return rank + " of " + suit;
+    }
+}
+
+// Класс, представляющий колоду карт
+class Deck {
+    private List<Card> cards;
+
+    public Deck() {
+        initializeDeck();
+    }
+
+    // Инициализация колоды 52 стандартными картами
+    private void initializeDeck() {
+        cards = new ArrayList<>();
+        String[] ranks = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"};
+        String[] suits = {"Hearts", "Diamonds", "Clubs", "Spades"};
+
+        for (String suit : suits) {
+            for (String rank : ranks) {
+                cards.add(new Card(rank, suit));
+            }
+        }
+    }
+
+    // Перетасовка колоды
+    public void shuffle() {
+        Collections.shuffle(cards);
+    }
+
+    // Сдача карты из колоды
+    public Card deal() {
+        if (cards.isEmpty()) {
+            return null; // Возвращаем null, если колода пуста
+        }
+
+        Card dealtCard = cards.remove(0);
+        return dealtCard;
+    }
+
+    // Возврат карты в колоду с контролем дублирования
+    public void returnCard(Card card) {
+        if (!cards.contains(card)) {
+            cards.add(card);
+        }
+    }
+
+    // Получение текущего размера колоды
+    public int getSize() {
+        return cards.size();
+    }
+}
+
+public class CardDeckExample {
+    public static void main(String[] args) {
+        Deck deck = new Deck();
+
+        // Перетасовка колоды
+        deck.shuffle();
+
+        // Сдача нескольких карт
+        for (int i = 0; i < 5; i++) {
+            Card dealtCard = deck.deal();
+            if (dealtCard != null) {
+                System.out.println("Dealt Card: " + dealtCard);
+            } else {
+                System.out.println("No more cards in the deck.");
+            }
+        }
+
+        // Возврат одной карты в колоду
+        Card returnedCard = new Card("10", "Hearts");
+        deck.returnCard(returnedCard);
+
+        // Вывод текущего размера колоды
+        System.out.println("Deck Size: " + deck.getSize());
+    }
+}
 
