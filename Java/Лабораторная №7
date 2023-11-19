@@ -1,1 +1,64 @@
+import java.util.Scanner;
 
+public class CompoundInterestCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Выберите действие:");
+        System.out.println("1. Расчет сложного процента");
+        System.out.println("2. Вычисление процента для достижения заданной суммы");
+
+        int choice = scanner.nextInt();
+
+        switch (choice) {
+            case 1:
+                calculateCompoundInterest();
+                break;
+            case 2:
+                calculateRequiredRate();
+                break;
+            default:
+                System.out.println("Неверный выбор.");
+        }
+    }
+
+    // Метод для расчета сложного процента
+    private static void calculateCompoundInterest() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Введите начальную сумму:");
+        double principal = scanner.nextDouble();
+
+        System.out.println("Введите годовую процентную ставку (в виде десятичной дроби, например, 0.05 для 5%):");
+        double interestRate = scanner.nextDouble();
+
+        System.out.println("Введите количество периодов (лет):");
+        int years = scanner.nextInt();
+
+        // Формула для расчета будущей суммы с учетом сложного процента
+        double amount = principal * Math.pow(1 + interestRate, years);
+        double interest = amount - principal;
+
+        System.out.println("Через " + years + " лет сумма будет: " + amount);
+        System.out.println("Общий интерес составит: " + interest);
+    }
+
+    // Метод для вычисления процента для достижения заданной суммы
+    private static void calculateRequiredRate() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Введите начальную сумму:");
+        double principal = scanner.nextDouble();
+
+        System.out.println("Введите конечную сумму:");
+        double targetAmount = scanner.nextDouble();
+
+        System.out.println("Введите количество периодов (лет):");
+        int years = scanner.nextInt();
+
+        // Формула для вычисления годовой процентной ставки для достижения заданной суммы
+        double interestRate = Math.pow(targetAmount / principal, 1.0 / years) - 1;
+
+        System.out.println("Необходимая годовая процентная ставка: " + (interestRate * 100) + "%");
+    }
+}
