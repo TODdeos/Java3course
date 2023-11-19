@@ -1,1 +1,58 @@
+import java.io.*;
+import java.util.HashSet;
+import java.util.Set;
 
+public class TextFileCompression {
+    public static void main(String[] args) {
+        String sourceFilePath = "source.txt";
+        String compressedFilePath = "compressed.txt";
+        String decompressedFilePath = "decompressed.txt";
+
+        // Шаг 1: Сжатие файла
+        compressFile(sourceFilePath, compressedFilePath);
+
+        // Шаг 2: Восстановление из сжатого файла
+        decompressFile(compressedFilePath, decompressedFilePath);
+    }
+
+    // Метод для сжатия файла
+    private static void compressFile(String sourceFilePath, String compressedFilePath) {
+        Set<String> uniqueLines = new HashSet<>();
+        int removedDuplicatesCount = 0;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(sourceFilePath));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(compressedFilePath))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (uniqueLines.add(line)) {
+                    writer.write(line);
+                    writer.newLine();
+                } else {
+                    removedDuplicatesCount++;
+                }
+            }
+
+            System.out.println("Количество удаленных дублирующихся строк: " + removedDuplicatesCount);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Метод для восстановления из сжатого файла
+    private static void decompressFile(String compressedFilePath, String decompressedFilePath) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(compressedFilePath));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(decompressedFilePath))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.newLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
