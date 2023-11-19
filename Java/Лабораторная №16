@@ -1,1 +1,125 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.awt.BorderLayout;
+
+public class TextEditor extends JFrame {
+    private JTextArea textArea;
+    private JFileChooser fileChooser;
+    private JLabel statusLabel;
+
+    private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+    public TextEditor() {
+        setTitle("Текстовый редактор");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        textArea = new JTextArea();
+        JScrollPane scrollPane = new JScrollPane(textArea);
+
+        fileChooser = new JFileChooser();
+        statusLabel = new JLabel("Готов");
+
+        JMenuBar menuBar = new JMenuBar();
+        JMenu fileMenu = new JMenu("Файл");
+
+        JMenuItem openMenuItem = new JMenuItem("Открыть");
+        openMenuItem.addActionListener(new OpenActionListener());
+        fileMenu.add(openMenuItem);
+
+        JMenuItem saveMenuItem = new JMenuItem("Сохранить");
+        saveMenuItem.addActionListener(new SaveActionListener());
+        fileMenu.add(saveMenuItem);
+
+        menuBar.add(fileMenu);
+        setJMenuBar(menuBar);
+
+        add(scrollPane);
+        add(statusLabel, BorderLayout.SOUTH);
+
+        // Добавляем слушатель для проверки орфографии при вводе текста
+        textArea.getDocument().addDocumentListener(new SpellCheckListener());
+
+        // Запускаем поток для проверки орфографии каждые 2 секунды
+        executorService.scheduleWithFixedDelay(this::executeSpellCheck, 0, 2, TimeUnit.SECONDS);
+    }
+
+    private class OpenActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int returnVal = fileChooser.showOpenDialog(TextEditor.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                    StringBuilder text = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        text.append(line).append("\n");
+                    }
+                    textArea.setText(text.toString());
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(TextEditor.this, "Ошибка при чтении файла", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private class SaveActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            int returnVal = fileChooser.showSaveDialog(TextEditor.this);
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                    writer.write(textArea.getText());
+                    JOptionPane.showMessageDialog(TextEditor.this, "Файл успешно сохранен", "Успех", JOptionPane.INFORMATION_MESSAGE);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(TextEditor.this, "Ошибка при сохранении файла", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    private class SpellCheckListener implements javax.swing.event.DocumentListener {
+        @Override
+        public void insertUpdate(javax.swing.event.DocumentEvent e) {
+            // Очищаем статус при вставке текста
+            statusLabel.setText("Готов");
+        }
+
+        @Override
+        public void removeUpdate(javax.swing.event.DocumentEvent e) {
+            // Очищаем статус при удалении текста
+            statusLabel.setText("Готов");
+        }
+
+        @Override
+        public void changedUpdate(javax.swing.event.DocumentEvent e) {
+            // Не используется для PlainText
+        }
+    }
+
+    private void executeSpellCheck() {
+        String currentText = textArea.getText();
+
+        String correctedText = currentText.replace("неправильное", "правильное");
+        if (!currentText.equals(correctedText)) {
+            textArea.setText(correctedText);
+            statusLabel.setText("Произведена автозамена");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new TextEditor().setVisible(true);
+        });
+    }
+}
 
