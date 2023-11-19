@@ -1,1 +1,47 @@
+// Базовый интерфейс
+interface Animal {
+    void makeSound();
+}
 
+// Реализация интерфейса для собаки
+class Dog implements Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Woof! Woof!");
+    }
+}
+
+// Реализация интерфейса для кошки
+class Cat implements Animal {
+    @Override
+    public void makeSound() {
+        System.out.println("Meow! Meow!");
+    }
+}
+
+// Класс, использующий полиморфизм
+public class AnimalDemo {
+    // Метод, принимающий объекты любого класса, реализующего интерфейс Animal
+    public static void animalSound(Animal animal) {
+        animal.makeSound();
+    }
+
+    public static void main(String[] args) {
+        // Создание объектов разных классов
+        Animal myDog = new Dog();
+        Animal myCat = new Cat();
+
+        // Вызов метода с использованием полиморфизма
+        animalSound(myDog); // Вывод: Woof! Woof!
+        animalSound(myCat); // Вывод: Meow! Meow!
+    }
+}
+В этом примере интерфейс Animal определяет метод makeSound(). 
+Классы Dog и Cat реализуют этот интерфейс и предоставляют свою собственную 
+реализацию метода makeSound().
+
+Метод animalSound() в классе AnimalDemo принимает объекты 
+типа Animal и вызывает их метод makeSound(). При вызове этого метода с
+объектами Dog и Cat происходит динамическое определение метода во
+время выполнения (динамическое связывание),
+и вызывается соответствующая реализация для каждого объекта.
